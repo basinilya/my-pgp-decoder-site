@@ -7,7 +7,7 @@ import {
   loadPrivateKeyRecords,
   upsertPrivateKeyRecord
 } from 'my-message-utils';
-import quickStartScript from '../public/assets/quick-start.sh?raw';
+import quickStartScript from './assets/quick-start.sh?raw';
 
 const statusText = document.querySelector('#status-text');
 const messageOutput = document.querySelector('#message-output');
