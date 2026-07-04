@@ -234,7 +234,7 @@ updatePassphraseRequirement(false);
 installConsoleMirror({ onEntry: appendConsoleEntry });
 console.info('Console mirroring is active.');
 
-const base = new URL('.', window.location.href).href
+const base = new URL('.', window.location.href).href;
 const quickStartCmd = document.querySelector('#quick-start-cmd');
 if (quickStartCmd) {
   const adaptedScript = quickStartScript.replace(
