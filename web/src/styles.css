@@ -158,6 +158,24 @@ input[type='file'] {
   padding-left: 20px;
 }
 
+.stored-key-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.stored-key-summary {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.stored-key-delete {
+  flex-shrink: 0;
+  padding: 8px 12px;
+}
+
 .console-panel {
   margin-top: auto;
   border-top: 2px solid #d8e7e0;

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   createMemoryStorage,
+  deletePrivateKeyRecord,
   decodeBase64Url,
   decryptUrlSafePgpMessage,
   escapeHtml,
@@ -48,6 +49,25 @@ describe('my-message-utils', () => {
 
     expect(records).toHaveLength(1);
     expect(matched?.fingerprint).toBe(record.fingerprint);
+  });
+
+  it('deletes stored private keys by id', async () => {
+    const storage = createMemoryStorage();
+    const keyPath = path.resolve(process.cwd(), '../shell-examples/sample-secret-key.asc');
+    const armoredKey = fs.readFileSync(keyPath, 'utf8');
+
+    const record = await upsertPrivateKeyRecord(
+      {
+        armoredKey,
+        passphrase: 'sample-passphrase',
+        label: 'sample'
+      },
+      storage
+    );
+
+    expect(deletePrivateKeyRecord(record.id, storage)).toBe(true);
+    expect(loadPrivateKeyRecords(storage)).toHaveLength(0);
+    expect(deletePrivateKeyRecord(record.id, storage)).toBe(false);
   });
 
   it('decrypts a URL-safe encoded binary pgp message', async () => {

@@ -111,6 +111,22 @@ export function savePrivateKeyRecords(records, storage = getDefaultStorage()) {
   storage.setItem(KEY_DB_STORAGE_KEY, JSON.stringify(records));
 }
 
+export function deletePrivateKeyRecord(recordId, storage = getDefaultStorage()) {
+  const normalizedId = String(recordId || '').trim();
+  if (!normalizedId) {
+    return false;
+  }
+
+  const records = loadPrivateKeyRecords(storage);
+  const nextRecords = records.filter((record) => record.id !== normalizedId);
+  if (nextRecords.length === records.length) {
+    return false;
+  }
+
+  savePrivateKeyRecords(nextRecords, storage);
+  return true;
+}
+
 export async function upsertPrivateKeyRecord({ armoredKey, passphrase = '', label = '' }, storage = getDefaultStorage()) {
   const metadata = await extractPrivateKeyMetadata(armoredKey);
   const records = loadPrivateKeyRecords(storage);

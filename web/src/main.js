@@ -1,4 +1,5 @@
 import {
+  deletePrivateKeyRecord,
   decryptUrlSafePgpMessage,
   escapeHtml,
   installConsoleMirror,
@@ -46,9 +47,38 @@ function renderStoredKeys() {
 
   records.forEach((record) => {
     const item = document.createElement('li');
+    item.className = 'stored-key-item';
+
+    const summary = document.createElement('span');
+    summary.className = 'stored-key-summary';
     const label = record.label ? `${record.label} ` : '';
     const users = record.userIds && record.userIds.length > 0 ? record.userIds.join(', ') : 'Unknown user';
-    item.textContent = `${label}${users} (${record.fingerprint})`;
+    summary.textContent = `${label}${users} (${record.fingerprint})`;
+
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'toolbar-btn ghost stored-key-delete';
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', async () => {
+      const confirmed = window.confirm(`Delete stored key ${record.fingerprint}?`);
+      if (!confirmed) {
+        setStatus(`Deletion cancelled for key ${record.fingerprint}.`);
+        return;
+      }
+
+      const deleted = deletePrivateKeyRecord(record.id);
+      if (!deleted) {
+        setStatus(`Key ${record.fingerprint} was already removed.`);
+        renderStoredKeys();
+        return;
+      }
+
+      renderStoredKeys();
+      setStatus(`Deleted key ${record.fingerprint}.`);
+      await loadAndDecryptFromUrlIfPresent();
+    });
+
+    item.append(summary, deleteButton);
     storedKeysList.appendChild(item);
   });
 }
