@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PGP URL Decoder</title>
+    <link rel="icon" href="/assets/favicon-D5o01XGW.svg" type="image/svg+xml" />
+    <script type="module" crossorigin src="/assets/index-Cux67DPk.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CkebxaaG.css">
+  </head>
+  <body>
+    <div class="bg-orb bg-orb-a" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb-b" aria-hidden="true"></div>
+
+    <header class="toolbar">
+      <h1 class="brand">PGP URL Decoder</h1>
+      <button id="open-key-manager" class="toolbar-btn" type="button">Manage Keys</button>
+    </header>
+
+    <main class="content">
+      <section class="panel status-panel">
+        <h2>Status</h2>
+        <p id="status-text">Loading...</p>
+      </section>
+
+      <section class="panel message-panel">
+        <h2>Decrypted Message</h2>
+        <pre id="message-output" class="message-output">(No message decrypted yet.)</pre>
+      </section>
+
+      <section id="key-manager" class="panel key-panel hidden" aria-live="polite">
+        <div class="key-panel-head">
+          <h2>Private Key Manager</h2>
+          <button id="close-key-manager" class="toolbar-btn ghost" type="button">Close</button>
+        </div>
+
+        <p>Upload or paste one armored private key to local browser storage.</p>
+
+        <label class="field">
+          <span>Upload private key file</span>
+          <input id="key-file" type="file" accept=".asc,.key,.txt" />
+        </label>
+
+        <label class="field">
+          <span>Or paste armored private key</span>
+          <textarea id="key-text" rows="8" placeholder="-----BEGIN PGP PRIVATE KEY BLOCK-----"></textarea>
+        </label>
+
+        <div class="field-row">
+          <label class="field">
+            <span>Label (optional)</span>
+            <input id="key-label" type="text" placeholder="My laptop key" />
+          </label>
+          <label id="key-passphrase-field" class="field">
+            <span id="key-passphrase-label">Passphrase (optional)</span>
+            <input id="key-passphrase" type="password" autocomplete="off" />
+          </label>
+        </div>
+
+        <button id="save-key" class="toolbar-btn" type="button">Save Key</button>
+
+        <h3>Stored Keys</h3>
+        <ul id="stored-keys" class="stored-keys"></ul>
+      </section>
+    </main>
+
+    <section class="console-panel">
+      <h2>Browser Console Mirror</h2>
+      <div id="console-output" class="console-output" aria-live="polite"></div>
+    </section>
+
+  </body>
+</html>
