@@ -7,6 +7,7 @@ import {
   loadPrivateKeyRecords,
   upsertPrivateKeyRecord
 } from 'my-message-utils';
+import quickStartScript from '../public/assets/quick-start.sh?raw';
 
 const statusText = document.querySelector('#status-text');
 const messageOutput = document.querySelector('#message-output');
@@ -233,10 +234,14 @@ updatePassphraseRequirement(false);
 installConsoleMirror({ onEntry: appendConsoleEntry });
 console.info('Console mirroring is active.');
 
+const base = new URL('.', window.location.href).href
 const quickStartCmd = document.querySelector('#quick-start-cmd');
 if (quickStartCmd) {
-  const base = window.location.origin + window.location.pathname.replace(/\/?$/, '/');
-  quickStartCmd.textContent = `curl -fsSL ${base}assets/quick-start.sh | bash`;
+  const adaptedScript = quickStartScript.replace(
+    /BASE_URL="http:\/\/localhost:5173"/,
+    `BASE_URL="${base}"`
+  );
+  quickStartCmd.textContent = adaptedScript;
 }
 
 setMessage('(Waiting for decrypted content.)');

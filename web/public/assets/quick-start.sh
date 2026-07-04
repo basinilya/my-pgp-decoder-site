@@ -14,7 +14,7 @@ KEY_EMAIL="quick-start@example.local"
 KEY_NAME="Quick Start Test Key"
 PASSPHRASE="quick-start-passphrase"
 MESSAGE="Hello from PGP URL Decoder! If you can read this, decryption worked."
-PORT="${PORT:-5173}"
+BASE_URL="http://localhost:5173"
 
 if ! command -v gpg >/dev/null 2>&1; then
   echo "Error: gpg is not installed or not in PATH." >&2
@@ -69,7 +69,7 @@ ENCODED=$(printf '%s' "${MESSAGE}" | gpg \
   --encrypt \
   | base64 | tr '+/' '-_' | tr -d '=\n')
 
-URL="http://localhost:${PORT}/?urlsafe-pgp-message=${ENCODED}"
+URL="${BASE_URL}?urlsafe-pgp-message=${ENCODED}"
 
 # ---------------------------------------------------------------------------
 # 6. Print results.
