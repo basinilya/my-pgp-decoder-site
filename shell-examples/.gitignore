@@ -1,9 +1,0 @@
-# Runtime artifacts
-*.decrypted
-*.rev
-
-# Local shell/editor noise
-.DS_Store
-Thumbs.db
-*.swp
-*.tmp
