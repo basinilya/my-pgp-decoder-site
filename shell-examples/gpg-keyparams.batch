@@ -1,0 +1,11 @@
+%echo Generating a sample OpenPGP key
+Key-Type: RSA
+Key-Length: 3072
+Subkey-Type: RSA
+Subkey-Length: 3072
+Name-Real: Sample User
+Name-Email: sample.user@example.com
+Expire-Date: 1y
+Passphrase: sample-passphrase
+%commit
+%echo Key generation complete
