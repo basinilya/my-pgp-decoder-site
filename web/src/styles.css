@@ -153,6 +153,16 @@ input[type='file'] {
   font: inherit;
 }
 
+.field-required span {
+  color: #8d3d12;
+  font-weight: 700;
+}
+
+.field-required input[type='password'] {
+  border-color: var(--accent-2);
+  background: #fff6ef;
+}
+
 .stored-keys {
   margin: 0;
   padding-left: 20px;

@@ -7,6 +7,7 @@ import {
   decodeBase64Url,
   decryptUrlSafePgpMessage,
   escapeHtml,
+  extractPrivateKeyMetadata,
   findMatchingKeyRecord,
   loadPrivateKeyRecords,
   upsertPrivateKeyRecord
@@ -51,6 +52,13 @@ describe('my-message-utils', () => {
     expect(matched?.fingerprint).toBe(record.fingerprint);
   });
 
+  it('detects when an uploaded private key requires a passphrase', async () => {
+    const keyPath = path.resolve(process.cwd(), '../shell-examples/sample-secret-key.asc');
+    const metadata = await extractPrivateKeyMetadata(fs.readFileSync(keyPath, 'utf8'));
+
+    expect(metadata.requiresPassphrase).toBe(true);
+  });
+
   it('deletes stored private keys by id', async () => {
     const storage = createMemoryStorage();
     const keyPath = path.resolve(process.cwd(), '../shell-examples/sample-secret-key.asc');
@@ -89,5 +97,20 @@ describe('my-message-utils', () => {
 
     expect(result.ok).toBe(true);
     expect(result.plaintext.trim()).toBe('sample message');
+  });
+
+  it('rejects saving a protected key without the needed passphrase', async () => {
+    const storage = createMemoryStorage();
+    const keyPath = path.resolve(process.cwd(), '../shell-examples/sample-secret-key.asc');
+
+    await expect(
+      upsertPrivateKeyRecord(
+        {
+          armoredKey: fs.readFileSync(keyPath, 'utf8'),
+          label: 'sample key'
+        },
+        storage
+      )
+    ).rejects.toThrow('requires a passphrase');
   });
 });

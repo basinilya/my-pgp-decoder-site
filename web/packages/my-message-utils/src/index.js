@@ -89,7 +89,8 @@ export async function extractPrivateKeyMetadata(armoredKey) {
   return {
     fingerprint: privateKey.getFingerprint(),
     keyIds: [...new Set(keyIds)],
-    userIds: privateKey.getUserIDs()
+    userIds: privateKey.getUserIDs(),
+    requiresPassphrase: !privateKey.isDecrypted()
   };
 }
 
@@ -131,6 +132,20 @@ export async function upsertPrivateKeyRecord({ armoredKey, passphrase = '', labe
   const metadata = await extractPrivateKeyMetadata(armoredKey);
   const records = loadPrivateKeyRecords(storage);
 
+  if (metadata.requiresPassphrase) {
+    if (!passphrase) {
+      throw new Error('This private key requires a passphrase.');
+    }
+
+    const privateKey = await openpgp.readPrivateKey({ armoredKey });
+
+    try {
+      await openpgp.decryptKey({ privateKey, passphrase });
+    } catch {
+      throw new Error('The provided passphrase could not unlock this private key.');
+    }
+  }
+
   const next = {
     id: metadata.fingerprint,
     label: String(label || '').trim(),
@@ -139,6 +154,7 @@ export async function upsertPrivateKeyRecord({ armoredKey, passphrase = '', labe
     fingerprint: metadata.fingerprint,
     keyIds: metadata.keyIds,
     userIds: metadata.userIds,
+    requiresPassphrase: metadata.requiresPassphrase,
     updatedAt: new Date().toISOString()
   };
 

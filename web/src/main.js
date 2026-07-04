@@ -2,6 +2,7 @@ import {
   deletePrivateKeyRecord,
   decryptUrlSafePgpMessage,
   escapeHtml,
+  extractPrivateKeyMetadata,
   installConsoleMirror,
   loadPrivateKeyRecords,
   upsertPrivateKeyRecord
@@ -16,11 +17,39 @@ const closeKeyManagerButton = document.querySelector('#close-key-manager');
 const keyFileInput = document.querySelector('#key-file');
 const keyTextInput = document.querySelector('#key-text');
 const keyLabelInput = document.querySelector('#key-label');
+const keyPassphraseField = document.querySelector('#key-passphrase-field');
+const keyPassphraseLabel = document.querySelector('#key-passphrase-label');
 const keyPassphraseInput = document.querySelector('#key-passphrase');
 const saveKeyButton = document.querySelector('#save-key');
 const storedKeysList = document.querySelector('#stored-keys');
 
 let keyFileText = '';
+
+function updatePassphraseRequirement(requiresPassphrase) {
+  keyPassphraseInput.required = Boolean(requiresPassphrase);
+  keyPassphraseField.classList.toggle('field-required', Boolean(requiresPassphrase));
+  keyPassphraseLabel.textContent = requiresPassphrase ? 'Passphrase (required)' : 'Passphrase (optional)';
+  keyPassphraseInput.placeholder = requiresPassphrase ? 'Required to unlock this key' : '';
+  keyPassphraseInput.setAttribute('aria-required', requiresPassphrase ? 'true' : 'false');
+}
+
+async function inspectPendingKey(armoredKey) {
+  const trimmedKey = String(armoredKey || '').trim();
+  if (!trimmedKey) {
+    updatePassphraseRequirement(false);
+    return null;
+  }
+
+  const metadata = await extractPrivateKeyMetadata(trimmedKey);
+  updatePassphraseRequirement(metadata.requiresPassphrase);
+  if (metadata.requiresPassphrase) {
+    setStatus(`Key ${metadata.fingerprint} requires a passphrase before it can be saved.`);
+  } else {
+    setStatus(`Key ${metadata.fingerprint} does not require a passphrase.`);
+  }
+
+  return metadata;
+}
 
 function setStatus(text) {
   statusText.textContent = text;
@@ -134,11 +163,35 @@ keyFileInput.addEventListener('change', async (event) => {
   keyFileText = '';
 
   if (!file) {
+    updatePassphraseRequirement(false);
     return;
   }
 
   keyFileText = await file.text();
-  setStatus(`Loaded key file ${file.name}. Click Save Key to import.`);
+
+  try {
+    const metadata = await inspectPendingKey(keyFileText);
+    const passphraseNote = metadata?.requiresPassphrase ? ' Enter its passphrase, then save.' : ' Click Save Key to import.';
+    setStatus(`Loaded key file ${file.name}.${passphraseNote}`);
+  } catch (error) {
+    setStatus(`Loaded file ${file.name}, but it is not a valid private key: ${error.message}`);
+  }
+});
+
+keyTextInput.addEventListener('blur', async () => {
+  const armoredKey = keyTextInput.value.trim();
+  if (!armoredKey) {
+    if (!keyFileText.trim()) {
+      updatePassphraseRequirement(false);
+    }
+    return;
+  }
+
+  try {
+    await inspectPendingKey(armoredKey);
+  } catch (error) {
+    setStatus(`Pasted key could not be read: ${error.message}`);
+  }
 });
 
 saveKeyButton.addEventListener('click', async () => {
@@ -170,6 +223,7 @@ saveKeyButton.addEventListener('click', async () => {
   }
 });
 
+updatePassphraseRequirement(false);
 installConsoleMirror({ onEntry: appendConsoleEntry });
 console.info('Console mirroring is active.');
 
