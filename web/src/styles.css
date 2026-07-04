@@ -98,6 +98,30 @@ body {
   color: var(--ink-soft);
 }
 
+.about-code {
+  margin: 0 0 12px;
+  background: #0f1614;
+  color: #d7fbe9;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.88rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.about-code {
+  margin: 0 0 12px;
+  background: #0f1614;
+  color: #d7fbe9;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.88rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
 .about-panel h3 {
   margin: 20px 0 10px;
 }

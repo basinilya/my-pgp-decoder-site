@@ -233,6 +233,12 @@ updatePassphraseRequirement(false);
 installConsoleMirror({ onEntry: appendConsoleEntry });
 console.info('Console mirroring is active.');
 
+const quickStartCmd = document.querySelector('#quick-start-cmd');
+if (quickStartCmd) {
+  const base = window.location.origin + window.location.pathname.replace(/\/?$/, '/');
+  quickStartCmd.textContent = `curl -fsSL ${base}assets/quick-start.sh | bash`;
+}
+
 setMessage('(Waiting for decrypted content.)');
 renderStoredKeys();
 loadAndDecryptFromUrlIfPresent();
