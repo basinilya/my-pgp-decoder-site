@@ -57,6 +57,74 @@ body {
   backdrop-filter: blur(6px);
 }
 
+.toolbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.about-panel {
+  width: min(1000px, 100% - 24px);
+  margin: 0 auto 0;
+  animation: reveal 320ms ease forwards;
+}
+
+.about-panel.hidden {
+  display: none;
+}
+
+.about-panel-inner {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.about-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.about-head h2 {
+  margin: 0;
+}
+
+.about-panel p {
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.about-panel h3 {
+  margin: 20px 0 10px;
+}
+
+.about-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.about-table th,
+.about-table td {
+  border: 1px solid var(--line);
+  padding: 9px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.about-table thead th {
+  background: #e6f2ec;
+  font-weight: 700;
+}
+
+.about-table tbody tr:nth-child(even) td {
+  background: #f7fbf8;
+}
+
 .brand {
   margin: 0;
   font-size: 1.25rem;

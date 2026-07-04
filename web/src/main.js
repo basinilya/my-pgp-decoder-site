@@ -12,6 +12,9 @@ const statusText = document.querySelector('#status-text');
 const messageOutput = document.querySelector('#message-output');
 const consoleOutput = document.querySelector('#console-output');
 const keyManager = document.querySelector('#key-manager');
+const openAboutButton = document.querySelector('#open-about');
+const closeAboutButton = document.querySelector('#close-about');
+const aboutPanel = document.querySelector('#about-panel');
 const openKeyManagerButton = document.querySelector('#open-key-manager');
 const closeKeyManagerButton = document.querySelector('#close-key-manager');
 const keyFileInput = document.querySelector('#key-file');
@@ -154,6 +157,9 @@ async function loadAndDecryptFromUrlIfPresent() {
     toggleKeyManager(true);
   }
 }
+
+openAboutButton.addEventListener('click', () => aboutPanel.classList.toggle('hidden', false));
+closeAboutButton.addEventListener('click', () => aboutPanel.classList.toggle('hidden', true));
 
 openKeyManagerButton.addEventListener('click', () => toggleKeyManager(true));
 closeKeyManagerButton.addEventListener('click', () => toggleKeyManager(false));

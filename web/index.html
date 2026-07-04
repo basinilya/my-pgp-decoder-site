@@ -13,8 +13,69 @@
 
     <header class="toolbar">
       <h1 class="brand">PGP URL Decoder</h1>
-      <button id="open-key-manager" class="toolbar-btn" type="button">Manage Keys</button>
+      <div class="toolbar-actions">
+        <button id="open-about" class="toolbar-btn ghost" type="button">About</button>
+        <button id="open-key-manager" class="toolbar-btn" type="button">Manage Keys</button>
+      </div>
     </header>
+
+    <section id="about-panel" class="about-panel hidden" aria-live="polite">
+      <div class="about-panel-inner">
+        <div class="about-head">
+          <h2>About PGP URL Decoder</h2>
+          <button id="close-about" class="toolbar-btn ghost" type="button">Close</button>
+        </div>
+        <p>
+          This is a <strong>fully static, client-side tool</strong> for decrypting OpenPGP-encrypted
+          messages that are embedded directly in a URL as a URL-safe base64 parameter
+          (<code>?urlsafe-pgp-message=…</code>). Everything happens in your browser — no server
+          ever sees your plaintext, your private key, or your passphrase.
+        </p>
+        <h3>How it differs from PrivateBin and similar paste services</h3>
+        <table class="about-table">
+          <thead>
+            <tr><th></th><th>This site</th><th>PrivateBin / similar</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Server involvement</td>
+              <td>None — fully static, can be served from GitHub Pages or any file host</td>
+              <td>Requires a running server to store and serve the encrypted paste</td>
+            </tr>
+            <tr>
+              <td>Encryption type</td>
+              <td>Asymmetric OpenPGP (RSA / ECC keypairs)</td>
+              <td>Symmetric AES with a random key in the URL fragment</td>
+            </tr>
+            <tr>
+              <td>Where is the ciphertext?</td>
+              <td>Inside the URL itself — no external storage needed</td>
+              <td>On the server; the URL is only a reference to it</td>
+            </tr>
+            <tr>
+              <td>Key management</td>
+              <td>Recipient stores their private key in browser local storage</td>
+              <td>No key management — the decryption key travels with the link</td>
+            </tr>
+            <tr>
+              <td>Expiry / deletion</td>
+              <td>The URL is self-contained; you control the link lifetime yourself</td>
+              <td>Server-controlled expiry or burn-after-reading options</td>
+            </tr>
+            <tr>
+              <td>Who can decrypt?</td>
+              <td>Only the holder of the matching private key</td>
+              <td>Anyone who has the link (and the key embedded in its fragment)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          The intended use case is sending a short secret to a specific person by email or chat,
+          where the recipient already has a GPG keypair and you have their public key. The
+          ciphertext lives entirely in the URL — there is nothing to host, expire, or delete.
+        </p>
+      </div>
+    </section>
 
     <main class="content">
       <section class="panel status-panel">
