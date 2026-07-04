@@ -132,6 +132,16 @@ body {
   text-transform: uppercase;
 }
 
+.brand-link,
+.brand-link:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-link:hover {
+  text-decoration: underline;
+}
+
 .toolbar-btn {
   font: inherit;
   border: 1px solid var(--ink);
