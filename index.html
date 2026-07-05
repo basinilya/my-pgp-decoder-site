@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PGP URL Decoder</title>
     <link rel="icon" href="./assets/favicon-D5o01XGW.svg" type="image/svg+xml" />
-    <script type="module" crossorigin src="./assets/index-B4XllGjY.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-KI58eVTq.css">
+    <script type="module" crossorigin src="./assets/index-BM6lOTIj.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DZ7FADA1.css">
   </head>
   <body>
     <div class="bg-orb bg-orb-a" aria-hidden="true"></div>
@@ -92,7 +92,7 @@
 
       <section class="panel message-panel">
         <h2>Decrypted Message</h2>
-        <pre id="message-output" class="message-output">(No message decrypted yet.)</pre>
+        <div id="message-output" class="message-output">(No message decrypted yet.)</div>
       </section>
 
       <section id="key-manager" class="panel key-panel hidden" aria-live="polite">
@@ -135,6 +135,8 @@
       <h2>Browser Console Mirror</h2>
       <div id="console-output" class="console-output" aria-live="polite"></div>
     </section>
+
+    <div id="status-toast" class="status-toast status-toast-neutral" role="status" aria-live="polite"></div>
 
   </body>
 </html>
