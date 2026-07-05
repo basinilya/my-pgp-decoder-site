@@ -131,6 +131,8 @@ export function deletePrivateKeyRecord(recordId, storage = getDefaultStorage()) 
 export async function upsertPrivateKeyRecord({ armoredKey, passphrase = '', label = '' }, storage = getDefaultStorage()) {
   const metadata = await extractPrivateKeyMetadata(armoredKey);
   const records = loadPrivateKeyRecords(storage);
+  let storedArmoredKey = armoredKey;
+  let storedRequiresPassphrase = metadata.requiresPassphrase;
 
   if (metadata.requiresPassphrase) {
     if (!passphrase) {
@@ -140,7 +142,9 @@ export async function upsertPrivateKeyRecord({ armoredKey, passphrase = '', labe
     const privateKey = await openpgp.readPrivateKey({ armoredKey });
 
     try {
-      await openpgp.decryptKey({ privateKey, passphrase });
+      const unlockedPrivateKey = await openpgp.decryptKey({ privateKey, passphrase });
+      storedArmoredKey = unlockedPrivateKey.armor();
+      storedRequiresPassphrase = false;
     } catch {
       throw new Error('The provided passphrase could not unlock this private key.');
     }
@@ -149,12 +153,12 @@ export async function upsertPrivateKeyRecord({ armoredKey, passphrase = '', labe
   const next = {
     id: metadata.fingerprint,
     label: String(label || '').trim(),
-    armoredKey,
-    passphrase,
+    armoredKey: storedArmoredKey,
+    passphrase: '',
     fingerprint: metadata.fingerprint,
     keyIds: metadata.keyIds,
     userIds: metadata.userIds,
-    requiresPassphrase: metadata.requiresPassphrase,
+    requiresPassphrase: storedRequiresPassphrase,
     updatedAt: new Date().toISOString()
   };
 

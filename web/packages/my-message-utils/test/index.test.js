@@ -50,6 +50,8 @@ describe('my-message-utils', () => {
 
     expect(records).toHaveLength(1);
     expect(matched?.fingerprint).toBe(record.fingerprint);
+    expect(records[0].passphrase).toBe('');
+    expect(records[0].requiresPassphrase).toBe(false);
   });
 
   it('detects when an uploaded private key requires a passphrase', async () => {
