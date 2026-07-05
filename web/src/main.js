@@ -31,6 +31,17 @@ const storedKeysList = document.querySelector('#stored-keys');
 let keyFileText = '';
 let statusToastTimeoutId = null;
 
+function jumpToPanel(panel, focusTarget) {
+  if (!panel || panel.classList.contains('hidden')) {
+    return;
+  }
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (focusTarget && typeof focusTarget.focus === 'function') {
+    focusTarget.focus({ preventScroll: true });
+  }
+}
+
 function updatePassphraseRequirement(requiresPassphrase) {
   keyPassphraseInput.required = Boolean(requiresPassphrase);
   keyPassphraseField.classList.toggle('field-required', Boolean(requiresPassphrase));
@@ -89,8 +100,18 @@ function setMessage(plainText) {
   messageOutput.innerHTML = escapeHtml(plainText || '(No message decrypted yet.)');
 }
 
+function toggleAboutPanel(show) {
+  aboutPanel.classList.toggle('hidden', !show);
+  if (show) {
+    jumpToPanel(aboutPanel, closeAboutButton);
+  }
+}
+
 function toggleKeyManager(show) {
   keyManager.classList.toggle('hidden', !show);
+  if (show) {
+    jumpToPanel(keyManager, closeKeyManagerButton);
+  }
 }
 
 function renderStoredKeys() {
@@ -185,8 +206,8 @@ async function loadAndDecryptFromUrlIfPresent() {
   }
 }
 
-openAboutButton.addEventListener('click', () => aboutPanel.classList.toggle('hidden', false));
-closeAboutButton.addEventListener('click', () => aboutPanel.classList.toggle('hidden', true));
+openAboutButton.addEventListener('click', () => toggleAboutPanel(true));
+closeAboutButton.addEventListener('click', () => toggleAboutPanel(false));
 
 openKeyManagerButton.addEventListener('click', () => toggleKeyManager(true));
 closeKeyManagerButton.addEventListener('click', () => toggleKeyManager(false));
