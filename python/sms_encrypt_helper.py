@@ -9,7 +9,11 @@ from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 class SmsEncryptHelper:
     @staticmethod
-    def encrypt(text: str, pgp_recipient: str, base_url: str):
+    def encrypt(
+        text: str,
+        pgp_recipient: str = "quick-start@example.local",
+        base_url: str = "http://localhost:5173",
+    ):
         """Encrypt text for a recipient and return a URL object with the payload."""
         if not text:
             raise ValueError("text must not be empty")
