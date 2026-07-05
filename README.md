@@ -1,5 +1,7 @@
 # PGP URL Decoder Test Project
 
+**Try it out:** https://basinilya.github.io/my-pgp-decoder-site/
+
 This repository contains a static web application and helper scripts for working with encrypted messages embedded directly in URLs.
 
 The main flow is:
