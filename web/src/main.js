@@ -10,6 +10,7 @@ import {
 import quickStartScript from './assets/quick-start.sh?raw';
 
 const statusText = document.querySelector('#status-text');
+const statusToast = document.querySelector('#status-toast');
 const messageOutput = document.querySelector('#message-output');
 const consoleOutput = document.querySelector('#console-output');
 const keyManager = document.querySelector('#key-manager');
@@ -28,6 +29,7 @@ const saveKeyButton = document.querySelector('#save-key');
 const storedKeysList = document.querySelector('#stored-keys');
 
 let keyFileText = '';
+let statusToastTimeoutId = null;
 
 function updatePassphraseRequirement(requiresPassphrase) {
   keyPassphraseInput.required = Boolean(requiresPassphrase);
@@ -55,8 +57,32 @@ async function inspectPendingKey(armoredKey) {
   return metadata;
 }
 
+function showStatusToast(text) {
+  if (!statusToast) {
+    return;
+  }
+
+  if (statusToastTimeoutId) {
+    clearTimeout(statusToastTimeoutId);
+  }
+
+  const isAlert = /failed|error|unable|missing|not found|could not|requires a passphrase/i.test(text);
+  statusToast.classList.remove('status-toast-neutral', 'status-toast-alert', 'is-visible');
+  statusToast.classList.add(isAlert ? 'status-toast-alert' : 'status-toast-neutral');
+  statusToast.textContent = text;
+
+  requestAnimationFrame(() => {
+    statusToast.classList.add('is-visible');
+  });
+
+  statusToastTimeoutId = setTimeout(() => {
+    statusToast.classList.remove('is-visible');
+  }, 2800);
+}
+
 function setStatus(text) {
   statusText.textContent = text;
+  showStatusToast(text);
 }
 
 function setMessage(plainText) {
